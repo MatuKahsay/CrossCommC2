@@ -22,3 +22,8 @@ def init_server_socket():
 
     secure_sock = context.wrap_socket(sock, server_side=True)
     return secure_sock
+
+def banner():
+    print('╔╗ ┌─┐┬─┐┌─┐┌┐ ┌─┐┌┐┌┌─┐┌─┐ ╔═╗2')
+    print('╠╩╗├─┤├┬┘├┤ ├┴┐│ ││││├┤ └─┐ ║ by the Mayor')
+    print('╚═╝┴ ┴┴└─└─┘└─┘└─┘┘└┘└─┘└─┘ ╚═╝')
