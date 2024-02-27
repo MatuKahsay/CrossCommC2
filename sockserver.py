@@ -39,3 +39,4 @@ def comm_out(targ_id, message):
     message = str(message)
     message = base64.b64encode(bytes(message, encoding='utf8'))
     targ_id.send(message)
+    
