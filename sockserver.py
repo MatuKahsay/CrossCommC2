@@ -217,3 +217,25 @@ def pshell_cradle():
     print(f'\n[+] Encoded payload\n\npowershell -e {b64_runner_cal}')
     b64_runner_cal_decoded = base64.b64decode(b64_runner_cal).decode()
     print(f'\n[+] Unencoded payload\n\n{b64_runner_cal_decoded}')
+
+def help():
+    print('''
+╔═╗┌─┐┌┬┐┌┬┐┌─┐┌┐┌┌┬┐┌─┐
+║ │ │││││││├─┤│││ ││└─┐
+╚═╝└─┘┴ ┴┴ ┴┴ ┴┘└┘─┴┘└─┘
+------------------------
+Menu Commands
+------------------------------------------------------------
+listeners -g --> Generate a new listener
+winplant py --> Generate a Windows Compatible Python Payload
+linplant py --> Generate a Linux Compatible Python Payload
+exeplant --> Generate an executable payload for Windows
+sessions -l --> List sessions
+sessions -i <val> --> Enter a new session
+kill <val> --> Kills an active session
+exit --> Exits BarebonesC2
+Session Commands
+------------------------------------------------------------
+background --> Backgrounds the current session
+exit --> Terminates the current session
+''')
