@@ -80,3 +80,10 @@ def target_comm(targ_id, targets, num):
                 targ_id.close()
                 break
             print(response)
+
+def listener_handler():
+    sock.bind((host_ip, int(host_port)))
+    print('[+] Awaiting connection from client...')
+    sock.listen()
+    t1 = threading.Thread(target=comm_handler)
+    t1.start()
