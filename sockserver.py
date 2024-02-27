@@ -27,10 +27,15 @@ def banner():
     print('╔╗ ┌─┐┬─┐┌─┐┌┐ ┌─┐┌┐┌┌─┐┌─┐ ╔═╗2')
     print('╠╩╗├─┤├┬┘├┤ ├┴┐│ ││││├┤ └─┐ ║ by the Mayor')
     print('╚═╝┴ ┴┴└─└─┘└─┘└─┘┘└┘└─┘└─┘ ╚═╝')
-    
+
 def comm_in(targ_id):
     print(f'[+] Awaiting response...')
     response = targ_id.recv(4096).decode()
     response = base64.b64decode(response)
     response = response.decode().strip()
     return response
+
+def comm_out(targ_id, message):
+    message = str(message)
+    message = base64.b64encode(bytes(message, encoding='utf8'))
+    targ_id.send(message)
