@@ -72,4 +72,4 @@ Contribution
 Contributions are welcome. Please submit pull requests or issues through the project's GitHub page.
 License
 
-This project is licensed under [LICENSE NAME]. Please see the LICENSE file for more details.
+This project is licensed under MIT LICENSE. Please see the LICENSE file for more details.
